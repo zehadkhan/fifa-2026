@@ -79,32 +79,33 @@ const ALL_CH = [
   602,801,802,619,621,142,143,936,356,359,845,203,204,
 ];
 
+// All times are Bangladesh Standard Time (BST, UTC+6)
 export const matches = [
   {
     id: 1,
     teams: "🇩🇪 Germany vs 🇭🇷 Croatia",
-    time: "04:00",
+    time: "04:00 AM",
     date: "Jun 15",
     channelIds: ALL_CH,
   },
   {
     id: 2,
     teams: "🇮🇹 Italy vs 🇺🇾 Uruguay",
-    time: "06:00",
+    time: "06:00 AM",
     date: "Jun 15",
     channelIds: ALL_CH,
   },
   {
     id: 3,
     teams: "🇳🇱 Netherlands vs 🇨🇦 Canada",
-    time: "06:00",
+    time: "06:00 AM",
     date: "Jun 15",
     channelIds: ALL_CH,
   },
   {
     id: 4,
     teams: "🇧🇪 Belgium vs 🇲🇽 Mexico",
-    time: "08:00",
+    time: "08:00 AM",
     date: "Jun 15",
     channelIds: ALL_CH,
   },

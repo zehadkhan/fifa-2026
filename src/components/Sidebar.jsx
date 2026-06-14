@@ -26,8 +26,19 @@ export default function Sidebar({ matches, activeKey, onSelectChannel }) {
         color: 'var(--muted)',
         borderBottom: '1px solid var(--border)',
         flexShrink: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
       }}>
-        ⚽ Schedule — Jun 15
+        <span>⚽ Schedule — Jun 15</span>
+        <span style={{
+          background: 'rgba(99,102,241,0.15)',
+          color: 'var(--accent)',
+          padding: '2px 6px',
+          borderRadius: 4,
+          fontSize: '0.6rem',
+          letterSpacing: '1px',
+        }}>🇧🇩 BD Time</span>
       </div>
 
       {/* Match list */}
