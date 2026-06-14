@@ -8,7 +8,7 @@ const AD_DOMAINS = [
   'hilltopads.net', 'adsterra.com', 'clickadu.com', 'zeropark.com',
 ];
 
-export default function Player({ channel }) {
+export default function Player({ channel, onPlayingChange }) {
   const iframeRef = useRef(null);
   const [isStopped, setIsStopped] = useState(false);
   const [toast, setToast] = useState('');
@@ -39,18 +39,22 @@ export default function Player({ channel }) {
   useEffect(() => {
     if (!channel) return;
     setIsStopped(false);
+    onPlayingChange?.(true);
     if (iframeRef.current) {
       iframeRef.current.src = '';
       requestAnimationFrame(() => {
         if (iframeRef.current) iframeRef.current.src = channel.url;
       });
     }
-    // Block the first 4 seconds of clicks (ad trigger window after load)
     activateShield(4000, 'Loading stream...');
     showToast(`▶  Now Playing: ${channel.name}`);
   }, [channel?.channelId]);
 
-  // Shield click: absorb it, then let next click through
+  // If no channel selected, mark as not playing
+  useEffect(() => {
+    if (!channel) onPlayingChange?.(false);
+  }, [channel]);
+
   const handleShieldClick = () => {
     setAdShield(false);
     clearTimeout(shieldTimer.current);
@@ -60,12 +64,14 @@ export default function Player({ channel }) {
     if (iframeRef.current) iframeRef.current.src = '';
     setIsStopped(true);
     setAdShield(false);
+    onPlayingChange?.(false);
     showToast('⏹  Stopped');
   };
 
   const handlePlay = () => {
     if (!channel) return;
     setIsStopped(false);
+    onPlayingChange?.(true);
     if (iframeRef.current) iframeRef.current.src = channel.url;
     activateShield(4000, 'Loading stream...');
     showToast(`▶  Playing: ${channel.name}`);
