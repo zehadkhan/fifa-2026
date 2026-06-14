@@ -1,10 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Sidebar from './components/Sidebar.jsx';
 import Player from './components/Player.jsx';
 
+const LS_KEY = 'fifa2026_active_channel';
+
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function App() {
-  const [active, setActive] = useState(null);
+  const [active, setActiveState] = useState(loadSaved);
   const activeKey = active ? `${active.matchId}-${active.channelId}` : null;
+
+  const setActive = useCallback((ch) => {
+    setActiveState(ch);
+    if (ch) {
+      localStorage.setItem(LS_KEY, JSON.stringify(ch));
+    } else {
+      localStorage.removeItem(LS_KEY);
+    }
+  }, []);
 
   return (
     <div style={{
