@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar.jsx';
 import Player from './components/Player.jsx';
-import { channels } from './channels.js';
+import { matches } from './channels.js';
 
 export default function App() {
-  const [activeChannel, setActiveChannel] = useState(null);
+  const [active, setActive] = useState(null);
+  // active = { matchId, channelId, name, flag, url, matchTeams }
+
+  const activeKey = active ? `${active.matchId}-${active.channelId}` : null;
 
   return (
     <div style={{
@@ -20,32 +23,27 @@ export default function App() {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 20px',
-        height: 56,
+        height: 54,
         background: 'var(--surface)',
         borderBottom: '1px solid var(--border)',
         flexShrink: 0,
-        zIndex: 10,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 800, fontSize: '1.15rem', letterSpacing: '-0.3px' }}>
-          <span style={{ fontSize: '1.5rem' }}>⚽</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-0.3px' }}>
+          <span style={{ fontSize: '1.4rem' }}>⚽</span>
           <span>FIFA <span style={{ color: 'var(--accent)' }}>2026</span> Live</span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          {activeChannel && (
-            <span style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>
-              Watching: <strong style={{ color: 'var(--text)' }}>{activeChannel.name}</strong>
+          {active && (
+            <span style={{ fontSize: '0.78rem', color: 'var(--muted)', maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {active.matchTeams} · <span style={{ color: 'var(--text)', fontWeight: 600 }}>{active.flag} {active.name}</span>
             </span>
           )}
           <div style={{
-            background: 'var(--live)',
-            color: '#fff',
-            fontSize: '0.65rem',
-            fontWeight: 800,
-            letterSpacing: '1.5px',
-            padding: '3px 9px',
-            borderRadius: 5,
-            animation: 'blink 2s infinite',
+            background: 'var(--live)', color: '#fff',
+            fontSize: '0.62rem', fontWeight: 800,
+            letterSpacing: '1.5px', padding: '3px 8px',
+            borderRadius: 4, animation: 'blink 2s infinite',
           }}>
             LIVE
           </div>
@@ -55,11 +53,11 @@ export default function App() {
       {/* Body */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <Sidebar
-          channels={channels}
-          activeId={activeChannel?.id}
-          onSelect={(ch) => setActiveChannel(ch)}
+          matches={matches}
+          activeKey={activeKey}
+          onSelectChannel={setActive}
         />
-        <Player channel={activeChannel} />
+        <Player channel={active} />
       </div>
 
       <style>{`
