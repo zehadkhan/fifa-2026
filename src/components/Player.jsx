@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { useViewerCount } from '../hooks/useViewerCount.js';
 
 const AD_DOMAINS = [
   'doubleclick.net', 'googlesyndication.com', 'adnxs.com', 'adsrvr.org',
@@ -11,8 +12,9 @@ export default function Player({ channel }) {
   const iframeRef = useRef(null);
   const [isStopped, setIsStopped] = useState(false);
   const [toast, setToast] = useState('');
-  const [adShield, setAdShield] = useState(false); // transparent click absorber
+  const [adShield, setAdShield] = useState(false);
   const [shieldMsg, setShieldMsg] = useState('');
+  const viewers = useViewerCount(channel?.channelId ?? null);
   const toastTimer = useRef(null);
   const shieldTimer = useRef(null);
 
@@ -198,9 +200,24 @@ export default function Player({ channel }) {
           </div>
         )}
 
-        <span style={{ fontWeight: 600, fontSize: '0.9rem', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <span style={{ fontWeight: 600, fontSize: '0.9rem', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {channel ? channel.name : '—'}
         </span>
+
+        {/* Viewer count */}
+        {viewers !== null && showPlayer && (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 5,
+            background: 'rgba(239,68,68,0.1)',
+            border: '1px solid rgba(239,68,68,0.2)',
+            borderRadius: 20, padding: '3px 10px',
+            fontSize: '0.75rem', fontWeight: 700,
+          }}>
+            <span style={{ color: 'var(--live)', fontSize: '0.6rem', animation: 'sonar-red 1.5s infinite' }}>●</span>
+            <span style={{ color: 'var(--live)' }}>{viewers.toLocaleString()}</span>
+            <span style={{ color: 'var(--muted)', fontWeight: 400 }}>watching</span>
+          </div>
+        )}
 
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginLeft: 'auto' }}>
           {!isStopped && channel ? (
