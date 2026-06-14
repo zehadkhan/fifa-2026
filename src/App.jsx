@@ -23,12 +23,18 @@ export default function App() {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {active && (
-            <span style={{
-              fontSize: '0.78rem', color: 'var(--muted)',
-              maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-            }}>
-              {active.matchTeams} · <strong style={{ color: 'var(--text)' }}>{active.flag} {active.name}</strong>
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text)' }}>
+                {active.matchTeams}
+              </span>
+              <span style={{ color: 'var(--border)' }}>·</span>
+              <span style={{
+                fontSize: '0.75rem', color: 'var(--accent)', fontWeight: 600,
+                background: 'rgba(99,102,241,0.12)', padding: '2px 8px', borderRadius: 5,
+              }}>
+                {active.flag} {active.name}
+              </span>
+            </div>
           )}
           <div style={{
             background: 'var(--live)', color: '#fff',

@@ -209,20 +209,31 @@ export default function Sidebar({ activeKey, onSelectChannel }) {
 
                       {/* Teams + score */}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.8rem', fontWeight: 600, lineHeight: 1.3 }}>
-                          {teams.home}
-                          {(status !== 'upcoming') && teams.homeScore !== null && (
-                            <span style={{ color: 'var(--accent)', margin: '0 4px' }}>
-                              {teams.homeScore}–{teams.awayScore}
+                        {status !== 'upcoming' && teams.homeScore !== null ? (
+                          /* Live / Finished: show score between teams */
+                          <div style={{ fontSize: '0.8rem', fontWeight: 600, lineHeight: 1.3, display: 'flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
+                            <span>{teams.home}</span>
+                            <span style={{
+                              background: status === 'live' ? 'var(--live)' : 'var(--surface3)',
+                              color: '#fff', padding: '1px 7px', borderRadius: 4,
+                              fontSize: '0.85rem', fontWeight: 800, letterSpacing: '0.5px',
+                              fontVariantNumeric: 'tabular-nums',
+                            }}>
+                              {teams.homeScore} – {teams.awayScore}
                             </span>
-                          )}
-                          {' '}vs {teams.away}
-                        </div>
-                        {status === 'upcoming' && (
-                          <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginTop: 2 }}>
-                            {chIds.length > 0 ? `${chIds.length} channels` : 'Channels TBA'}
+                            <span>{teams.away}</span>
+                          </div>
+                        ) : (
+                          /* Upcoming: home vs away */
+                          <div style={{ fontSize: '0.8rem', fontWeight: 600, lineHeight: 1.3 }}>
+                            <span>{teams.home}</span>
+                            <span style={{ color: 'var(--muted)', margin: '0 5px', fontWeight: 400 }}>vs</span>
+                            <span>{teams.away}</span>
                           </div>
                         )}
+                        <div style={{ fontSize: '0.65rem', color: 'var(--muted)', marginTop: 2 }}>
+                          {chIds.length > 0 ? `${chIds.length} channels available` : 'Channels TBA'}
+                        </div>
                       </div>
 
                       <span style={{
