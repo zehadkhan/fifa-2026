@@ -7,8 +7,16 @@ const LS_KEY = 'fifa2026_active_channel';
 function loadSaved() {
   try {
     const raw = localStorage.getItem(LS_KEY);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    const ch = JSON.parse(raw);
+    // Reject stale entries with old sportsbay page URLs
+    if (!ch?.channelId || !ch?.url || !ch.url.includes('zonatvlive.xyz')) {
+      localStorage.removeItem(LS_KEY);
+      return null;
+    }
+    return ch;
   } catch {
+    localStorage.removeItem(LS_KEY);
     return null;
   }
 }

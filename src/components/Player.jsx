@@ -48,7 +48,7 @@ export default function Player({ channel }) {
     // Block the first 4 seconds of clicks (ad trigger window after load)
     activateShield(4000, 'Loading stream...');
     showToast(`▶  Now Playing: ${channel.name}`);
-  }, [channel?.id]);
+  }, [channel?.channelId]);
 
   // Shield click: absorb it, then let next click through
   const handleShieldClick = () => {
