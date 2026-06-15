@@ -140,12 +140,9 @@ export default function Player({ channel, onPlayingChange, isMobile }) {
           allowFullScreen
           playsInline
           frameBorder="0"
-          referrerPolicy={isMobile ? 'strict-origin-when-cross-origin' : 'no-referrer'}
+          referrerPolicy="no-referrer"
           allow="autoplay; fullscreen; picture-in-picture; encrypted-media; webkit-playsinline; playsinline"
-          sandbox={isMobile
-            ? 'allow-scripts allow-same-origin allow-forms allow-presentation allow-popups'
-            : 'allow-scripts allow-same-origin allow-forms allow-presentation'
-          }
+          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
           style={{
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
