@@ -46,7 +46,7 @@ export default function Player({ channel, onPlayingChange, isMobile }) {
         if (iframeRef.current) iframeRef.current.src = channel.url;
       });
     }
-    activateShield(4000, 'Loading stream...');
+    if (!isMobile) activateShield(4000, 'Loading stream...');
     showToast(`▶  Now Playing: ${channel.name}`);
   }, [channel?.channelId]);
 
@@ -73,7 +73,7 @@ export default function Player({ channel, onPlayingChange, isMobile }) {
     setIsStopped(false);
     onPlayingChange?.(true);
     if (iframeRef.current) iframeRef.current.src = channel.url;
-    activateShield(4000, 'Loading stream...');
+    if (!isMobile) activateShield(4000, 'Loading stream...');
     showToast(`▶  Playing: ${channel.name}`);
   };
 
@@ -85,7 +85,7 @@ export default function Player({ channel, onPlayingChange, isMobile }) {
         if (iframeRef.current) iframeRef.current.src = channel.url;
       });
     }
-    activateShield(4000, 'Reloading...');
+    if (!isMobile) activateShield(4000, 'Reloading...');
     showToast('↺  Reloading stream...');
   };
 
@@ -140,9 +140,12 @@ export default function Player({ channel, onPlayingChange, isMobile }) {
           allowFullScreen
           playsInline
           frameBorder="0"
-          referrerPolicy="no-referrer"
+          referrerPolicy={isMobile ? 'strict-origin-when-cross-origin' : 'no-referrer'}
           allow="autoplay; fullscreen; picture-in-picture; encrypted-media; webkit-playsinline; playsinline"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+          sandbox={isMobile
+            ? 'allow-scripts allow-same-origin allow-forms allow-presentation allow-popups'
+            : 'allow-scripts allow-same-origin allow-forms allow-presentation'
+          }
           style={{
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
@@ -151,8 +154,8 @@ export default function Player({ channel, onPlayingChange, isMobile }) {
           }}
         />
 
-        {/* Ad-absorb shield overlay — invisible, absorbs click-to-ad triggers */}
-        {showPlayer && adShield && (
+        {/* Ad-absorb shield overlay — desktop only; on mobile it blocks the iOS user gesture */}
+        {!isMobile && showPlayer && adShield && (
           <div
             onClick={handleShieldClick}
             title="Click to interact with player"
