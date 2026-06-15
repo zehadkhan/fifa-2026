@@ -8,7 +8,7 @@ const AD_DOMAINS = [
   'hilltopads.net', 'adsterra.com', 'clickadu.com', 'zeropark.com',
 ];
 
-export default function Player({ channel, onPlayingChange }) {
+export default function Player({ channel, onPlayingChange, isMobile }) {
   const iframeRef = useRef(null);
   const [isStopped, setIsStopped] = useState(false);
   const [toast, setToast] = useState('');
@@ -99,10 +99,20 @@ export default function Player({ channel, onPlayingChange }) {
   const showPlayer = channel && !isStopped;
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#000' }}>
+    <div style={{
+      flex: isMobile ? 'none' : 1,
+      width: isMobile ? '100%' : undefined,
+      display: 'flex', flexDirection: 'column',
+      overflow: 'hidden', background: '#000',
+    }}>
 
       {/* Player area */}
-      <div style={{ flex: 1, position: 'relative', background: '#000', overflow: 'hidden' }}>
+      <div style={{
+        flex: isMobile ? 'none' : 1,
+        aspectRatio: isMobile ? '16/9' : undefined,
+        width: isMobile ? '100%' : undefined,
+        position: 'relative', background: '#000', overflow: 'hidden',
+      }}>
 
         {/* Placeholder */}
         {!showPlayer && (
@@ -128,10 +138,11 @@ export default function Player({ channel, onPlayingChange }) {
           title="stream"
           src={showPlayer ? channel.url : ''}
           allowFullScreen
+          playsInline
           frameBorder="0"
           referrerPolicy="no-referrer"
-          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media; webkit-playsinline; playsinline"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-popups"
           style={{
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',
@@ -187,31 +198,31 @@ export default function Player({ channel, onPlayingChange }) {
 
       {/* Control bar */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 10,
-        padding: '10px 16px',
+        display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 10,
+        padding: isMobile ? '8px 10px' : '10px 16px',
         background: 'var(--surface)',
         borderTop: '1px solid var(--border)',
         flexShrink: 0,
         flexWrap: 'wrap',
       }}>
         {showPlayer && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <span style={{
-              width: 8, height: 8, borderRadius: '50%',
+              width: 7, height: 7, borderRadius: '50%',
               background: 'var(--live)',
               animation: 'sonar-red 1.5s infinite',
               display: 'inline-block',
             }} />
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--live)' }}>LIVE</span>
+            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--live)' }}>LIVE</span>
           </div>
         )}
 
-        <span style={{ fontWeight: 600, fontSize: '0.9rem', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <span style={{ fontWeight: 600, fontSize: isMobile ? '0.78rem' : '0.9rem', minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: isMobile ? '30vw' : undefined }}>
           {channel ? channel.name : '—'}
         </span>
 
-        {/* Viewer count */}
-        {viewers !== null && showPlayer && (
+        {/* Viewer count — hide on mobile to save space */}
+        {!isMobile && viewers !== null && showPlayer && (
           <div style={{
             display: 'flex', alignItems: 'center', gap: 5,
             background: 'rgba(239,68,68,0.1)',
@@ -225,12 +236,12 @@ export default function Player({ channel, onPlayingChange }) {
           </div>
         )}
 
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginLeft: 'auto' }}>
+        <div style={{ display: 'flex', gap: isMobile ? 5 : 8, alignItems: 'center', marginLeft: 'auto', flexWrap: 'nowrap' }}>
           {!isStopped && channel ? (
-            <button onClick={handleStop} style={btnStyle('var(--live)', true)} title="Stop">⏹ Stop</button>
+            <button onClick={handleStop} style={btnStyle('var(--live)', true)} title="Stop">⏹{!isMobile && ' Stop'}</button>
           ) : (
             channel && (
-              <button onClick={handlePlay} style={btnStyle('#22c55e', true)} title="Play">▶ Play</button>
+              <button onClick={handlePlay} style={btnStyle('#22c55e', true)} title="Play">&#9654; Play</button>
             )
           )}
 
@@ -239,16 +250,28 @@ export default function Player({ channel, onPlayingChange }) {
             disabled={!channel || isStopped}
             style={btnStyle('var(--surface3)', true, !channel || isStopped)}
           >
-            ↺ Reload
+            ↺{!isMobile && ' Reload'}
           </button>
 
-          <button
-            onClick={handleFullscreen}
-            disabled={!showPlayer}
-            style={btnStyle('var(--accent)', true, !showPlayer)}
-          >
-            ⛶ Fullscreen
-          </button>
+          {isMobile && channel ? (
+            <a
+              href={channel.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ ...btnStyle('var(--accent)', true), textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+              title="Open stream in browser"
+            >
+              &#8663; Open
+            </a>
+          ) : (
+            <button
+              onClick={handleFullscreen}
+              disabled={!showPlayer}
+              style={btnStyle('var(--accent)', true, !showPlayer)}
+            >
+              ⛶ Fullscreen
+            </button>
+          )}
         </div>
       </div>
 

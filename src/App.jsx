@@ -126,9 +126,7 @@ export default function App() {
         {/* On mobile: player first, sidebar below */}
         {isMobile ? (
           <>
-            <div style={{ flexShrink: 0, aspectRatio: '16/9', width: '100%', background: '#000' }}>
-              <Player channel={active} onPlayingChange={setStreaming} />
-            </div>
+            <Player channel={active} onPlayingChange={setStreaming} isMobile={true} />
             <div style={{ flex: 1, overflow: 'hidden', minHeight: 0 }}>
               <Sidebar activeKey={activeKey} onSelectChannel={setActive} isMobile={true} />
             </div>

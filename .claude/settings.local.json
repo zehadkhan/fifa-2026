@@ -10,7 +10,13 @@
       "Bash(curl -s http://localhost:5173)",
       "Bash(git init *)",
       "Bash(git remote *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git rebase *)",
+      "Bash(git stash *)",
+      "Bash(grep -E '\\\\.\\(js|ts|jsx|tsx|json|html|php\\)$')",
+      "Bash(git *)"
     ]
   }
 }
